@@ -1,0 +1,29 @@
+Listen 80
+<VirtualHost *:80>
+	ServerAdmin webmaster@localhost
+
+	DocumentRoot /opt/garage-door/www/html
+
+	<Directory /opt/garage-door/html>
+		AuthType Basic
+		AuthName "garage-door Restricted Access"
+		AuthUserFile /opt/garage-door/www/htpasswd
+		Require valid-user
+		SetEnvIf Request_URI "^/favicon.ico$" allow
+		Order allow,deny
+		Allow from env=allow
+		Satisfy Any
+	</Directory>
+
+	ScriptAlias /wsgi /opt/garage-door/www/wsgi-scripts/process.wsgi
+
+	<Directory /opt/garage-door/www/wsgi-scripts>
+		AddHandler wsgi-script .wsgi
+		AuthType Basic
+		AuthName "garage-door"
+		AuthUserFile /opt/garage-door/www/htpasswd
+		Require valid-user
+		Order allow,deny
+		Allow from all
+	</Directory>
+</VirtualHost>
