@@ -11,18 +11,21 @@ GPIO.output(7,False)
 
 TCP_IP = '192.168.1.4'
 TCP_PORT = 8080 
-BUFFER_SIZE = 20  # Normally 1024, but we want fast response
+BUFFER_SIZE = 20
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((TCP_IP, TCP_PORT))
 s.listen(1)
 conn, addr = s.accept()
-print 'Connection address:', addr
+print 'Connection address:', addr # change this to a log statement
 while 1:
     data = conn.recv(BUFFER_SIZE)
     if data is None: break
     if data == 'open':
+    	print 'Received DOOR Activation from %s' % str(addr) # change this to a log statement
 	GPIO.output(7,True)
 	time.sleep(2)
 	GPIO.output(7,False)
+    else: 
+    	print 'Incorrect DOOR Activation password received from %s' % str(addr)
 conn.close()
