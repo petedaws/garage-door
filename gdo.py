@@ -23,9 +23,11 @@ while 1:
     if data is None: break
     if data == 'open':
     	print 'Received DOOR Activation from %s' % str(addr) # change this to a log statement
+	conn.sendall('Received Correct DOOR Activation Code from %s\n' % str(addr))
 	GPIO.output(7,True)
 	time.sleep(2)
 	GPIO.output(7,False)
     else: 
     	print 'Incorrect DOOR Activation password received from %s' % str(addr)
+	conn.sendall('Incorrect DOOR Activation password received from %s\n' % str(addr))
 conn.close()
