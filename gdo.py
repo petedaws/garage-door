@@ -25,9 +25,14 @@ while 1:
     	print 'Received DOOR Activation from %s' % str(addr) # change this to a log statement
 	conn.sendall('Received Correct DOOR Activation Code from %s\n' % str(addr))
 	GPIO.output(7,True)
-	time.sleep(2)
+	time.sleep(4)
 	GPIO.output(7,False)
     else: 
     	print 'Incorrect DOOR Activation password received from %s' % str(addr)
-	conn.sendall('Incorrect DOOR Activation password received from %s\n' % str(addr))
+	try:	
+		conn.sendall('Incorrect DOOR Activation password received from %s\n' % str(addr))
+	except Exception as e:
+		conn.close()	
+		conn, addr = s.accept()	
+		print e
 conn.close()
