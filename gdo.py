@@ -13,7 +13,7 @@ except Exception as e:
 	exit(0)
 
 
-if sys.argv > 1:
+if len(sys.argv) > 1:
 	if sys.argv[1] == 'activate':
 		print 'Received DOOR Activation code' 
 		try:
