@@ -18,7 +18,7 @@ if len(sys.argv) > 1:
 		print 'Received DOOR Activation code' 
 		try:
 			GPIO.output(7,True)
-			time.sleep(4)
+			time.sleep(1)
 			GPIO.output(7,False)
 		except Exception as e:
 			print e, 'Failed to set GPIO'
