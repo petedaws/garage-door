@@ -1,30 +1,34 @@
-#!/usr/bin/env python
+from twisted.web.server import Site
+from twisted.web.resource import Resource
+from twisted.internet import reactor
 
 import RPi.GPIO as GPIO
 import time
 import sys
 
-try:
-	GPIO.setmode(GPIO.BOARD)
-	GPIO.setup(7,GPIO.OUT)
-	GPIO.output(7,False)
-except Exception as e:
-	print e, 'Failed to setup GPIO'
-	exit(0)
+GARAGE = 7
 
-
-if len(sys.argv) > 1:
-	if sys.argv[1] == 'activate':
-		print 'Received DOOR Activation code' 
-		try:
-			GPIO.output(7,True)
+class Trigger(Resource):
+	def render_POST(self, request):
+		if open('password','r').read().strip() == request.content.read():
+			GPIO.output(GARAGE,True)
 			time.sleep(1)
-			GPIO.output(7,False)
-		except Exception as e:
-			print e, 'Failed to set GPIO'
-	else:
-		print 'Incorrect DOOR Activation password received' 
-try:
-	GPIO.cleanup()
-except Exception as e:
-	print e, 'GPIO cleanup error'
+			GPIO.output(GARAGE,False)
+		return '<html></html>'
+
+if __name__ == "__main__":	
+	try:
+		GPIO.setmode(GPIO.BOARD)
+		GPIO.setup(GARAGE,GPIO.OUT)
+		GPIO.output(GARAGE,False)
+	except Exception as e:
+		print e, 'Failed to setup GPIO'
+		exit(0)
+	
+	garage = Resource()
+	garage.putChild("trigger",Trigger())
+	root = Resource()
+	root.putChild("garage", garage)
+	factory = Site(root)
+	reactor.listenTCP(8001, factory)
+	reactor.run()
