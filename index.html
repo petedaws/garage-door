@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garage Door Opener</title>
+<head>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        .activate {
+            width: 100%;
+            color: black;
+            font-size: 26px;
+            text-align: center;
+            padding:20px;
+        }
+        header {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 10px;
+            width: 100%;
+        }
+
+        footer {
+            width: 100%;
+            background-color: #000000;
+            color: #ffffff;
+            padding: 1rem;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .passwordbox{
+            border-radius:5px;
+            -moz-border-radius:5px;
+            -webkit-border-radius:5px;
+            width: 100%;
+            font-size: 26px;
+            padding:20px;
+        }
+
+        .resultbox {
+            width: 100%;
+            color: black;
+            font-size: 26px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+    </header>
+    <section>
+    <input class="activate" type="button" value="activate" onclick="loadDoc()">
+        <br>
+    <input class="passwordbox" id='password_field' placeholder="Password" type="password">
+    <div class="resultbox" id="result"></div>
+    <script>
+    function loadDoc() {
+        var xhttp = new XMLHttpRequest();
+        var password = document.getElementById("password_field").value
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4  && this.status == 200) {
+                if(this.responseText == "success"){
+                    document.getElementById("result").innerHTML = "Opening";
+                    document.getElementById("result").style.backgroundColor = "#4CAF50";
+                }
+                else {
+                    document.getElementById("result").innerHTML = "Incorrect Password";
+                    document.getElementById("result").style.backgroundColor = "red";
+                }
+            }
+        };
+        xhttp.open("POST", "activate", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("password-field=" + password);
+    }
+    </script>
+
+    </section>
+    <footer>
+    </footer>
+
+
+</body>
+</html>
