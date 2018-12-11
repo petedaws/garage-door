@@ -15,25 +15,27 @@ class Trigger(Resource):
 		self.password = open(password,'r').read().strip()
 
 	def render_POST(self, request):
-		if self.password == request.content.read():
-			GPIO.output(GARAGE,True)
-			time.sleep(1)
+		if self.password == request.content.read().decode('utf-8'):
+			print('success')
 			GPIO.output(GARAGE,False)
-		return '<html></html>'
+			time.sleep(1)
+			GPIO.output(GARAGE,True)
+		else:
+			print('fail')
+		return b'<html></html>'
 
 try:
 	GPIO.cleanup()
 	GPIO.setmode(GPIO.BOARD)
-	GPIO.setup(GARAGE,GPIO.OUT)
-	GPIO.output(GARAGE,False)
+	GPIO.setup(GARAGE,GPIO.OUT,initial=True)
 except Exception as e:
-	print e, 'Failed to setup GPIO'
+	print(e, 'Failed to setup GPIO')
 	exit(0)
 
 garage = Resource()
-garage.putChild("trigger",Trigger(PASSWD_PATH))
+garage.putChild(b"trigger",Trigger(PASSWD_PATH))
 root = Resource()
-root.putChild("garage", garage)
+root.putChild(b"garage", garage)
 factory = Site(root)
 application = Application("gdo")
 server = TCPServer(8001, factory)

@@ -2,7 +2,7 @@
 Description=Garage Door Opener
 
 [Service]
-ExecStart=/usr/bin/twistd --nodaemon --pidfile= -y /home/pi/garage-door/gdo.py
+ExecStart=/usr/bin/twistd3 --nodaemon --pidfile= -y /home/pi/garage-door/gdo.py
 
 User=pi
 Group=pi
